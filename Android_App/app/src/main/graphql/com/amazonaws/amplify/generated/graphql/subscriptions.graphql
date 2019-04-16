@@ -1,0 +1,25 @@
+# this is an auto generated file. This will be overwritten
+subscription OnCreateReminder {
+  onCreateReminder {
+    id
+    name
+    day
+    time
+  }
+}
+subscription OnUpdateReminder {
+  onUpdateReminder {
+    id
+    name
+    day
+    time
+  }
+}
+subscription OnDeleteReminder {
+  onDeleteReminder {
+    id
+    name
+    day
+    time
+  }
+}

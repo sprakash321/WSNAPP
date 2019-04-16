@@ -1,0 +1,25 @@
+# this is an auto generated file. This will be overwritten
+mutation CreateReminder($input: CreateReminderInput!) {
+  createReminder(input: $input) {
+    id
+    name
+    day
+    time
+  }
+}
+mutation UpdateReminder($input: UpdateReminderInput!) {
+  updateReminder(input: $input) {
+    id
+    name
+    day
+    time
+  }
+}
+mutation DeleteReminder($input: DeleteReminderInput!) {
+  deleteReminder(input: $input) {
+    id
+    name
+    day
+    time
+  }
+}

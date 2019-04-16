@@ -1,0 +1,19 @@
+{
+    "local": {
+        "awscloudformation": {
+            "AuthRoleName": "androidapp-20190413164840-authRole",
+            "UnauthRoleArn": "arn:aws:iam::054086375989:role/androidapp-20190413164840-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::054086375989:role/androidapp-20190413164840-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "androidapp-20190413164840-deployment",
+            "UnauthRoleName": "androidapp-20190413164840-unauthRole",
+            "StackName": "androidapp-20190413164840",
+            "StackId": "arn:aws:cloudformation:us-east-2:054086375989:stack/androidapp-20190413164840/e6bd8b10-5e35-11e9-bf3e-069bf518e2a4"
+        },
+        "categories": {
+            "auth": {
+                "cognito3a7e34e7": {}
+            }
+        }
+    }
+}
