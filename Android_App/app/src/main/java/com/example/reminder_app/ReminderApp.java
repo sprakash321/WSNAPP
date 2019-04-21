@@ -1,7 +1,12 @@
 package com.example.reminder_app;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.amazonaws.amplify.generated.graphql.ListRemindersQuery;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
@@ -21,6 +27,9 @@ import java.util.ArrayList;
 import javax.annotation.Nonnull;
 
 public class ReminderApp extends AppCompatActivity {
+    private static final int CAMERA_REQUEST = 1888;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+
     private final String TAG = ReminderApp.class.getSimpleName();
     ArrayList mReminders;
 
@@ -38,12 +47,39 @@ public class ReminderApp extends AppCompatActivity {
         reminder_data.getList().setAdapter(list_adapter);
 
         // add reminder button
-        Button add_btn = findViewById(R.id.add_reminder_btn);
-        add_btn.setOnClickListener(new View.OnClickListener() {
+        Button add_reminder_btn = findViewById(R.id.add_reminder_btn);
+        add_reminder_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent add_reminder_intent = new Intent(getApplicationContext(), add_reminder.class);
                 startActivity(add_reminder_intent);
+            }
+        });
+
+        // add picture button
+        Button add_picture_btn = findViewById(R.id.add_picture_btn);
+        add_picture_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // capture picture
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+                }
+                else
+                {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                }
+            }
+        });
+
+        // sign out button
+        Button sign_out_btn = findViewById(R.id.sign_out_btn);
+        sign_out_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
@@ -93,4 +129,37 @@ public class ReminderApp extends AppCompatActivity {
            Log.e(TAG, e.toString());
         }
     };
+
+    // camera stuff
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_PERMISSION_CODE)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+            else
+            {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            // acquire photo
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+            // send picture to cloud
+            // TODO
+        }
+    }
 }

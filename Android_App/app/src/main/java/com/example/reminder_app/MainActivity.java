@@ -24,10 +24,6 @@ import com.amazonaws.mobile.client.Callback;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int CAMERA_REQUEST = 1888;
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
-
-
     private final String TAG = MainActivity.class.getSimpleName();
 
 
