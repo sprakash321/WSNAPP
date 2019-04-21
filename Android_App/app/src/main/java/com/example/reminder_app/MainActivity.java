@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, userStateDetails.getUserState().toString());
                 switch (userStateDetails.getUserState()){
                     case SIGNED_IN:
-                        Intent i = new Intent(getApplicationContext(), ReminderApp.class);
-                        startActivity(i);
                         break;
                     case SIGNED_OUT:
                         showSignIn();

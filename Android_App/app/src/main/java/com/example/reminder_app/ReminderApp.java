@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 import com.amazonaws.amplify.generated.graphql.ListRemindersQuery;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.SignInUIOptions;
+import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
+import com.amazonaws.mobileconnectors.appsync.AppSyncSubscriptionCall;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
@@ -44,7 +47,8 @@ public class ReminderApp extends AppCompatActivity {
         reminder_data.reset();
         reminder_data.setList((ListView) findViewById(R.id.reminder_list));
         reminder_list_adapter list_adapter = new reminder_list_adapter(this,
-                reminder_data.getNames(), reminder_data.getDays(), reminder_data.getTimes(), ReminderApp.this);
+                reminder_data.getIDs(), reminder_data.getNames(), reminder_data.getDays(),
+                reminder_data.getTimes(), ReminderApp.this);
         reminder_data.setAdapter(list_adapter);
         reminder_data.getList().setAdapter(list_adapter);
 
@@ -93,6 +97,7 @@ public class ReminderApp extends AppCompatActivity {
 
         ClientFactory.init(this);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -113,7 +118,7 @@ public class ReminderApp extends AppCompatActivity {
 
             mReminders = new ArrayList<>(response.data().listReminders().items());
 
-            Log.i(TAG, "Retrieved list items: " + mReminders.toString());
+//            Log.i(TAG, "Retrieved list items: " + mReminders.toString());
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -134,7 +139,7 @@ public class ReminderApp extends AppCompatActivity {
 
         @Override
         public void onFailure(@Nonnull ApolloException e) {
-           Log.e(TAG, e.toString());
+            Log.e(TAG, e.toString());
         }
     };
 

@@ -38,9 +38,10 @@ public class reminder_data {
     public static void addTime(String data) { reminder_data.reminder_times.add(data); }
 
     // remove functions
-    public static void removeName(String data) { reminder_data.reminder_names.remove(data); }
-    public static void removeDay(String data) { reminder_data.reminder_days.remove(data); }
-    public static void removeTime(String data) { reminder_data.reminder_times.remove(data); }
+    public static void removeID(String data) { try{reminder_data.reminder_id.remove(data);} catch(Exception e) {} }
+    public static void removeName(String data) { try{reminder_data.reminder_names.remove(data);} catch(Exception e) {} }
+    public static void removeDay(String data) { try{reminder_data.reminder_days.remove(data);} catch(Exception e) {} }
+    public static void removeTime(String data) { try{reminder_data.reminder_times.remove(data);} catch(Exception e) {} }
 
     // set functions
     public static void setUser(String user) { reminder_data.username = user; }

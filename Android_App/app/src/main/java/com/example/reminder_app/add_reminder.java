@@ -17,11 +17,14 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.amazonaws.amplify.generated.graphql.CreateReminderMutation;
+import com.amazonaws.amplify.generated.graphql.ListRemindersQuery;
+import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.SimpleTimeZone;
@@ -38,6 +41,8 @@ public class add_reminder extends AppCompatActivity {
     Button add_deny_btn;
     Calendar myCalendar;
     DatePickerDialog.OnDateSetListener date;
+
+    ArrayList<ListRemindersQuery.Item> mReminders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +90,8 @@ public class add_reminder extends AppCompatActivity {
                             "At least one of the input fields are empty", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
-//                    reminder_data.addName(name);
-//                    reminder_data.addDay(day);
-//                    reminder_data.addTime(time);
-//                    reminder_data.getAdapter().notifyDataSetChanged();
-
                     save(name, day, time);
+                    finish();
                 }
             }
         });
@@ -165,7 +166,7 @@ public class add_reminder extends AppCompatActivity {
                 @Override
                 public void run() {
                     Toast.makeText(add_reminder.this, "Added reminder", Toast.LENGTH_SHORT).show();
-                    add_reminder.this.finish();
+                    query();
                 }
             });
         }
@@ -177,9 +178,45 @@ public class add_reminder extends AppCompatActivity {
                 public void run() {
                     Log.e("", "Failed to perform AddReminderMutation", e);
                     Toast.makeText(add_reminder.this, "Failed to add reminder", Toast.LENGTH_SHORT).show();
-                    add_reminder.this.finish();
                 }
             });
+        }
+    };
+
+    public void query(){
+        ClientFactory.appSyncClient().query(ListRemindersQuery.builder().build())
+                .responseFetcher(AppSyncResponseFetchers.CACHE_AND_NETWORK)
+                .enqueue(queryCallback);
+    }
+
+    private GraphQLCall.Callback<ListRemindersQuery.Data> queryCallback = new GraphQLCall.Callback<ListRemindersQuery.Data>() {
+        @Override
+        public void onResponse(@Nonnull Response<ListRemindersQuery.Data> response) {
+
+            mReminders = new ArrayList<>(response.data().listReminders().items());
+
+            Log.i("", "Retrieved list items: " + mReminders.toString());
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for(int i = 0; i < mReminders.size(); i++) {
+                        String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, time=");
+                        if(!reminder_data.id_exists(Tokens[1])) {
+                            reminder_data.addID(Tokens[1]);
+                            reminder_data.addName(Tokens[2]);
+                            reminder_data.addDay(Tokens[3]);
+                            reminder_data.addTime(Tokens[4].replace("}", ""));
+                        }
+                    }
+                    reminder_data.getAdapter().notifyDataSetChanged();
+                }
+            });
+        }
+
+        @Override
+        public void onFailure(@Nonnull ApolloException e) {
+            Log.e("", e.toString());
         }
     };
 }
