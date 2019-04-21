@@ -28,25 +28,12 @@ public class ReminderApp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_app);
-        // get username from main activity after sign in
-
-        // acquire reminder data from AWS
-        // TODO
-        ArrayList<reminder_info> reminders = new ArrayList<>();
-
-        // split into multiple data into multiple lists
-        reminder_data.reset();
-        for (reminder_info reminder : reminders)
-        {
-            reminder_data.addName(reminder.reminder_name);
-            reminder_data.addDay(reminder.days.toString());
-            reminder_data.addTime(reminder.time);
-        }
 
         // create reminder list
+        reminder_data.reset();
         reminder_data.setList((ListView) findViewById(R.id.reminder_list));
         reminder_list_adapter list_adapter = new reminder_list_adapter(this,
-                reminder_data.getNames(), reminder_data.getDays(), reminder_data.getTimes());
+                reminder_data.getNames(), reminder_data.getDays(), reminder_data.getTimes(), ReminderApp.this);
         reminder_data.setAdapter(list_adapter);
         reminder_data.getList().setAdapter(list_adapter);
 
@@ -84,17 +71,16 @@ public class ReminderApp extends AppCompatActivity {
 
             Log.i(TAG, "Retrieved list items: " + mReminders.toString());
 
-//            Log.i(TAG, "Retrieved list items: " + mPets.toString());
-
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     for(int i = 0; i < mReminders.size(); i++) {
-                        String[] Tokens = mReminders.get(i).toString().split(", name=|, day=|, time=");
-                        if(!reminder_data.name_exists(Tokens[1])) {
-                            reminder_data.addName(Tokens[1]);
-                            reminder_data.addDay(Tokens[2]);
-                            reminder_data.addTime(Tokens[3].replace("}", ""));
+                        String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, time=");
+                        if(!reminder_data.id_exists(Tokens[1])) {
+                            reminder_data.addID(Tokens[1]);
+                            reminder_data.addName(Tokens[2]);
+                            reminder_data.addDay(Tokens[3]);
+                            reminder_data.addTime(Tokens[4].replace("}", ""));
                         }
                     }
                     reminder_data.getAdapter().notifyDataSetChanged();

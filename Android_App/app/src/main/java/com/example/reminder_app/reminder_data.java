@@ -9,6 +9,7 @@ public class reminder_data {
     public static ListView reminder_list;
     public static  reminder_list_adapter list_adapter;
 
+    public static ArrayList<String> reminder_id;
     public static ArrayList<String> reminder_names;
     public static ArrayList<String> reminder_days;
     public static ArrayList<String> reminder_times;
@@ -17,6 +18,9 @@ public class reminder_data {
     public static String getUser() { return username; }
     public static ListView getList() { return reminder_list; }
     public static reminder_list_adapter getAdapter() { return list_adapter; }
+
+    public static ArrayList<String> getIDs() { return reminder_id; }
+    public static String getID(int idx) { return reminder_id.get(idx); }
 
     public static ArrayList<String> getNames() { return reminder_names; }
     public static String getName(int idx) { return reminder_names.get(idx); }
@@ -28,6 +32,7 @@ public class reminder_data {
     public static String getTime(int idx) { return reminder_times.get(idx); }
 
     // add functions
+    public static void addID(String data) { reminder_data.reminder_id.add(data); }
     public static void addName(String data) { reminder_data.reminder_names.add(data); }
     public static void addDay(String data) { reminder_data.reminder_days.add(data); }
     public static void addTime(String data) { reminder_data.reminder_times.add(data); }
@@ -48,6 +53,7 @@ public class reminder_data {
     // reset
     public static void reset() {
         reminder_data.username = new String();
+        reminder_data.reminder_id = new ArrayList<String>();
         reminder_data.reminder_names = new ArrayList<String>();
         reminder_data.reminder_days = new ArrayList<String>();
         reminder_data.reminder_times = new ArrayList<String>();
@@ -59,4 +65,12 @@ public class reminder_data {
         }
         return false;
     }
+
+    public static Boolean id_exists(String id) {
+        if(reminder_data.reminder_id.contains(id)) {
+            return true;
+        }
+        return false;
+    }
+
 }

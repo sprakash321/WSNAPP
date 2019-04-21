@@ -63,6 +63,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
+
+            @Override
+            public void onResult(UserStateDetails userStateDetails) {
+                Log.i(TAG, userStateDetails.getUserState().toString());
+                switch (userStateDetails.getUserState()){
+                    case SIGNED_IN:
+                        Intent i = new Intent(getApplicationContext(), ReminderApp.class);
+                        startActivity(i);
+                        break;
+                    case SIGNED_OUT:
+                        showSignIn();
+                        break;
+                    default:
+                        AWSMobileClient.getInstance().signOut();
+                        showSignIn();
+                        break;
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, e.toString());
+            }
+        });
+
+    }
+
     private void showSignIn() {
         try {
             AWSMobileClient.getInstance().showSignIn(this,

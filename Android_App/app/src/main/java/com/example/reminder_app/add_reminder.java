@@ -85,10 +85,10 @@ public class add_reminder extends AppCompatActivity {
                             "At least one of the input fields are empty", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
-                    reminder_data.addName(name);
-                    reminder_data.addDay(day);
-                    reminder_data.addTime(time);
-                    reminder_data.getAdapter().notifyDataSetChanged();
+//                    reminder_data.addName(name);
+//                    reminder_data.addDay(day);
+//                    reminder_data.addTime(time);
+//                    reminder_data.getAdapter().notifyDataSetChanged();
 
                     save(name, day, time);
                 }

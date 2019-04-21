@@ -15,5 +15,22 @@
                 "cognito3a7e34e7": {}
             }
         }
+    },
+    "wsnenv": {
+        "awscloudformation": {
+            "AuthRoleName": "androidapp-20190421110923-authRole",
+            "UnauthRoleArn": "arn:aws:iam::054086375989:role/androidapp-20190421110923-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::054086375989:role/androidapp-20190421110923-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "androidapp-20190421110923-deployment",
+            "UnauthRoleName": "androidapp-20190421110923-unauthRole",
+            "StackName": "androidapp-20190421110923",
+            "StackId": "arn:aws:cloudformation:us-east-1:054086375989:stack/androidapp-20190421110923/d38df280-644f-11e9-a7a7-0a1726208052"
+        },
+        "categories": {
+            "auth": {
+                "cognito3a7e34e7": {}
+            }
+        }
     }
 }
