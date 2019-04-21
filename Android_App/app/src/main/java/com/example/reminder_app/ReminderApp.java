@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.amazonaws.amplify.generated.graphql.ListRemindersQuery;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.SignInUIOptions;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
@@ -79,7 +81,13 @@ public class ReminderApp extends AppCompatActivity {
         sign_out_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                try {
+                    AWSMobileClient.getInstance().signOut();
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(i);
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
             }
         });
 
