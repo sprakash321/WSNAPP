@@ -1,6 +1,10 @@
-type Reminder @model {
-  id: ID!
-  name: String!
-  day: String
-  time: String
+type Reminder @model @auth(rules: [
+	{allow: owner}
+	
+    { allow: owner, ownerField: "editors", operations: [update] }
+]) {
+	id: ID!
+	name: String!
+	day: String
+	time: String
 }

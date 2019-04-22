@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.amazonaws.amplify.generated.graphql.ListRemindersQuery;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.SignInUIOptions;
+import com.amazonaws.mobile.client.SignOutOptions;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
 import com.amazonaws.mobileconnectors.appsync.AppSyncSubscriptionCall;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
@@ -28,6 +29,7 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import javax.annotation.Nonnull;
 
@@ -37,6 +39,7 @@ public class ReminderApp extends AppCompatActivity {
 
     private final String TAG = ReminderApp.class.getSimpleName();
     ArrayList mReminders;
+    reminder_list_adapter list_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class ReminderApp extends AppCompatActivity {
         // create reminder list
         reminder_data.reset();
         reminder_data.setList((ListView) findViewById(R.id.reminder_list));
-        reminder_list_adapter list_adapter = new reminder_list_adapter(this,
+        list_adapter = new reminder_list_adapter(this,
                 reminder_data.getIDs(), reminder_data.getNames(), reminder_data.getDays(),
                 reminder_data.getTimes(), ReminderApp.this);
         reminder_data.setAdapter(list_adapter);
@@ -87,8 +90,11 @@ public class ReminderApp extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     AWSMobileClient.getInstance().signOut();
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(i);
+
+                    reminder_data.reset();
+                    reminder_data.getAdapter().reset();
+
+                    finish();
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
                 }
@@ -115,17 +121,15 @@ public class ReminderApp extends AppCompatActivity {
     private GraphQLCall.Callback<ListRemindersQuery.Data> queryCallback = new GraphQLCall.Callback<ListRemindersQuery.Data>() {
         @Override
         public void onResponse(@Nonnull Response<ListRemindersQuery.Data> response) {
-
             mReminders = new ArrayList<>(response.data().listReminders().items());
-
 //            Log.i(TAG, "Retrieved list items: " + mReminders.toString());
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    for(int i = 0; i < mReminders.size(); i++) {
+                    for (int i = 0; i < mReminders.size(); i++) {
                         String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, time=");
-                        if(!reminder_data.id_exists(Tokens[1])) {
+                        if (!reminder_data.id_exists(Tokens[1])) {
                             reminder_data.addID(Tokens[1]);
                             reminder_data.addName(Tokens[2]);
                             reminder_data.addDay(Tokens[3]);

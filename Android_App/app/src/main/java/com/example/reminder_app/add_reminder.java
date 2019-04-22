@@ -20,6 +20,7 @@ import com.amazonaws.amplify.generated.graphql.CreateReminderMutation;
 import com.amazonaws.amplify.generated.graphql.ListRemindersQuery;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
 import com.apollographql.apollo.GraphQLCall;
+import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 

@@ -52,6 +52,14 @@ public class reminder_list_adapter extends BaseAdapter {
         mInflator = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    public void reset() {
+        reminder_ids.clear();
+        reminder_names.clear();
+        reminder_days.clear();
+        reminder_time.clear();
+        //notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return reminder_names.size();

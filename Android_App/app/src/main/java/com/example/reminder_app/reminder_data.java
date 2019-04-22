@@ -9,10 +9,10 @@ public class reminder_data {
     public static ListView reminder_list;
     public static  reminder_list_adapter list_adapter;
 
-    public static ArrayList<String> reminder_id;
-    public static ArrayList<String> reminder_names;
-    public static ArrayList<String> reminder_days;
-    public static ArrayList<String> reminder_times;
+    public static ArrayList<String> reminder_id = new ArrayList<>();
+    public static ArrayList<String> reminder_names = new ArrayList<>();
+    public static ArrayList<String> reminder_days = new ArrayList<>();
+    public static ArrayList<String> reminder_times = new ArrayList<>();
 
     // get functions
     public static String getUser() { return username; }
@@ -54,10 +54,10 @@ public class reminder_data {
     // reset
     public static void reset() {
         reminder_data.username = new String();
-        reminder_data.reminder_id = new ArrayList<String>();
-        reminder_data.reminder_names = new ArrayList<String>();
-        reminder_data.reminder_days = new ArrayList<String>();
-        reminder_data.reminder_times = new ArrayList<String>();
+        reminder_data.reminder_id.clear();
+        reminder_data.reminder_names.clear();
+        reminder_data.reminder_days.clear();
+        reminder_data.reminder_times.clone();
     }
 
     public static Boolean name_exists(String name) {
