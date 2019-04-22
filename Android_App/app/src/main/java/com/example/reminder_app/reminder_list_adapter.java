@@ -89,11 +89,11 @@ public class reminder_list_adapter extends BaseAdapter {
             public void onClick(View view) {
                 delete(reminder_data.getID(i));
 
-                reminder_ids.remove(i);
-                reminder_names.remove(i);
-                reminder_days.remove(i);
-                reminder_time.remove(i);
-                notifyDataSetChanged();
+                //reminder_ids.remove(i);
+                //reminder_names.remove(i);
+                //reminder_days.remove(i);
+                //reminder_time.remove(i);
+                //notifyDataSetChanged();
             }
         });
 
@@ -127,6 +127,7 @@ public class reminder_list_adapter extends BaseAdapter {
                 @Override
                 public void run() {
                 Toast.makeText(activity, "Deleted reminder", Toast.LENGTH_SHORT).show();
+                query();
                 }
             });
         }
@@ -136,9 +137,9 @@ public class reminder_list_adapter extends BaseAdapter {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.e("", "Failed to perform DeleteReminderMutation", e);
-                    Toast.makeText(activity, "Failed to delete reminder", Toast.LENGTH_SHORT).show();
-                    query();
+                Log.e("", "Failed to perform DeleteReminderMutation", e);
+                Toast.makeText(activity, "Failed to delete reminder", Toast.LENGTH_SHORT).show();
+                query();
                 }
             });
         }
@@ -159,13 +160,14 @@ public class reminder_list_adapter extends BaseAdapter {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    reminder_data.reset();
                     for(int i = 0; i < mReminders.size(); i++) {
                         String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, time=");
                         if(!reminder_data.id_exists(Tokens[1])) {
-                            reminder_data.removeID(Tokens[1]);
-                            reminder_data.removeName(Tokens[2]);
-                            reminder_data.removeDay(Tokens[3]);
-                            reminder_data.removeTime(Tokens[4].replace("}", ""));
+                            reminder_data.addID(Tokens[1]);
+                            reminder_data.addName(Tokens[2]);
+                            reminder_data.addDay(Tokens[3]);
+                            reminder_data.addTime(Tokens[4].replace("}", ""));
                         }
                     }
                     reminder_data.getAdapter().notifyDataSetChanged();

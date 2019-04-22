@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.amazonaws.amplify.generated.graphql.ListRemindersQuery;
+import com.amazonaws.amplify.generated.graphql.OnCreateReminderSubscription;
+import com.amazonaws.amplify.generated.graphql.OnUpdateReminderSubscription;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.SignInUIOptions;
 import com.amazonaws.mobile.client.SignOutOptions;
@@ -40,6 +42,9 @@ public class ReminderApp extends AppCompatActivity {
     private final String TAG = ReminderApp.class.getSimpleName();
     ArrayList mReminders;
     reminder_list_adapter list_adapter;
+
+    Semaphore flag = new Semaphore(1);
+    int valid = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +100,7 @@ public class ReminderApp extends AppCompatActivity {
                     reminder_data.getAdapter().reset();
 
                     finish();
+                    valid = 0;
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
                 }
@@ -110,6 +116,7 @@ public class ReminderApp extends AppCompatActivity {
 
         // Query list data when we return to the screen
         query();
+
     }
 
     public void query(){
@@ -122,21 +129,31 @@ public class ReminderApp extends AppCompatActivity {
         @Override
         public void onResponse(@Nonnull Response<ListRemindersQuery.Data> response) {
             mReminders = new ArrayList<>(response.data().listReminders().items());
-//            Log.i(TAG, "Retrieved list items: " + mReminders.toString());
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    for (int i = 0; i < mReminders.size(); i++) {
-                        String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, time=");
-                        if (!reminder_data.id_exists(Tokens[1])) {
-                            reminder_data.addID(Tokens[1]);
-                            reminder_data.addName(Tokens[2]);
-                            reminder_data.addDay(Tokens[3]);
-                            reminder_data.addTime(Tokens[4].replace("}", ""));
+                    try {
+                        reminder_data.getAdapter().notifyDataSetChanged();
+                        flag.acquire();
+
+                        if(valid == 0) {
+                            valid = 1;
+                        } else {
+                            for (int i = 0; i < mReminders.size(); i++) {
+                                String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, time=");
+                                if (!reminder_data.id_exists(Tokens[1])) {
+                                    reminder_data.addID(Tokens[1]);
+                                    reminder_data.addName(Tokens[2]);
+                                    reminder_data.addDay(Tokens[3]);
+                                    reminder_data.addTime(Tokens[4].replace("}", ""));
+                                }
+                            }
+                            reminder_data.getAdapter().notifyDataSetChanged();
                         }
                     }
-                    reminder_data.getAdapter().notifyDataSetChanged();
+                    catch(Exception e) { }
+                    flag.release();
                 }
             });
         }
