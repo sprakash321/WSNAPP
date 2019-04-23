@@ -22,3 +22,24 @@ query ListReminders(
     nextToken
   }
 }
+query GetPictures($id: ID!) {
+  getPictures(id: $id) {
+    id
+    name
+    picture
+  }
+}
+query ListPicturess(
+  $filter: ModelPicturesFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listPicturess(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      picture
+    }
+    nextToken
+  }
+}

@@ -23,3 +23,24 @@ subscription OnDeleteReminder {
     time
   }
 }
+subscription OnCreatePictures {
+  onCreatePictures {
+    id
+    name
+    picture
+  }
+}
+subscription OnUpdatePictures {
+  onUpdatePictures {
+    id
+    name
+    picture
+  }
+}
+subscription OnDeletePictures {
+  onDeletePictures {
+    id
+    name
+    picture
+  }
+}

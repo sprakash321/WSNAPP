@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.amazonaws.amplify.generated.graphql.CreatePicturesMutation;
+import com.amazonaws.amplify.generated.graphql.CreateReminderMutation;
 import com.amazonaws.amplify.generated.graphql.ListRemindersQuery;
 import com.amazonaws.amplify.generated.graphql.OnCreateReminderSubscription;
 import com.amazonaws.amplify.generated.graphql.OnUpdateReminderSubscription;
@@ -26,14 +28,20 @@ import com.amazonaws.mobile.client.SignOutOptions;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
 import com.amazonaws.mobileconnectors.appsync.AppSyncSubscriptionCall;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import javax.annotation.Nonnull;
+
+import type.CreatePicturesInput;
 
 public class ReminderApp extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
@@ -191,9 +199,54 @@ public class ReminderApp extends AppCompatActivity {
         {
             // acquire photo
             Bitmap photo = (Bitmap) data.getExtras().get("data");
+            ArrayList<Integer> photo_array = new ArrayList<>();
+            for(int ii = 0; ii < photo.getWidth(); ii++) {
+                for(int jj =0; jj < photo.getHeight(); jj++) {
+                    photo_array.add(photo.getPixel(ii,jj));
+                }
+            }
+
+            int width = photo.getWidth(); // 121
+            int height = photo.getHeight(); // 162
+
 
             // send picture to cloud
             // TODO
+            CreatePicturesInput input = CreatePicturesInput.builder()
+                    .name(AWSMobileClient.getInstance().getIdentityId())
+                    .picture(photo_array)
+                    .build();
+
+            CreatePicturesMutation addPictureMutation = CreatePicturesMutation.builder()
+                    .input(input)
+                    .build();
+
+            ClientFactory.appSyncClient().mutate(addPictureMutation).enqueue(mutateCallback);
         }
     }
+
+    // Mutation callback code
+    private GraphQLCall.Callback<CreatePicturesMutation.Data> mutateCallback = new GraphQLCall.Callback<CreatePicturesMutation.Data>() {
+        @Override
+        public void onResponse(@Nonnull final Response<CreatePicturesMutation.Data> response) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ReminderApp.this, "Added picture", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void onFailure(@Nonnull final ApolloException e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("", "Failed to perform AddPicturesInput", e);
+                    Toast.makeText(ReminderApp.this, "Failed to add picture", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
+
 }

@@ -23,3 +23,24 @@ mutation DeleteReminder($input: DeleteReminderInput!) {
     time
   }
 }
+mutation CreatePictures($input: CreatePicturesInput!) {
+  createPictures(input: $input) {
+    id
+    name
+    picture
+  }
+}
+mutation UpdatePictures($input: UpdatePicturesInput!) {
+  updatePictures(input: $input) {
+    id
+    name
+    picture
+  }
+}
+mutation DeletePictures($input: DeletePicturesInput!) {
+  deletePictures(input: $input) {
+    id
+    name
+    picture
+  }
+}

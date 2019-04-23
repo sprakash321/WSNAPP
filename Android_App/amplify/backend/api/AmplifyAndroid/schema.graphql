@@ -8,3 +8,13 @@ type Reminder @model @auth(rules: [
 	day: String
 	time: String
 }
+
+type Pictures @model @auth(rules: [
+	{allow: owner}
+	
+    { allow: owner, ownerField: "editors", operations: [update] }
+]) {
+	id: ID!
+	name: String!
+	picture: [Int]
+}
