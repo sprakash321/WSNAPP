@@ -162,7 +162,7 @@ public class reminder_list_adapter extends BaseAdapter {
                 public void run() {
                     reminder_data.reset();
                     for(int i = 0; i < mReminders.size(); i++) {
-                        String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, start_time=|, end_time");
+                        String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, start_time=|, end_time=");
                         if(!reminder_data.id_exists(Tokens[1])) {
                             reminder_data.addID(Tokens[1]);
                             reminder_data.addName(Tokens[2]);

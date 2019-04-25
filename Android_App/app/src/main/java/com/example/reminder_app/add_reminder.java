@@ -74,9 +74,9 @@ public class add_reminder extends AppCompatActivity {
                     Toast toast = Toast.makeText(getApplicationContext(),
                             "At least one of the input fields are empty", Toast.LENGTH_SHORT);
                     toast.show();
-                } else if (start_time_total <= end_time_total) {
+                } else if (start_time_total > end_time_total) {
                     Toast toast = Toast.makeText(getApplicationContext(),
-                            "End time is later than start time", Toast.LENGTH_SHORT);
+                            "Start time is later than end time", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
                     save(name, day, start_time, end_time);
