@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -200,6 +201,9 @@ public class ReminderApp extends AppCompatActivity {
         {
             // acquire photo
             Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+            photo = (Bitmap.createScaledBitmap(photo, 121, 162, false));
+
             ArrayList<Integer> photo_array = new ArrayList<>();
             for(int ii = 0; ii < photo.getWidth(); ii++) {
                 for(int jj =0; jj < photo.getHeight(); jj++) {
