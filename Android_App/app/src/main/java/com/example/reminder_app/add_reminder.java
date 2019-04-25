@@ -37,7 +37,8 @@ import type.CreateReminderInput;
 public class add_reminder extends AppCompatActivity {
     EditText reminder_name_input;
     TextView date_input;
-    TimePicker time_input;
+    TimePicker start_time_input;
+    TimePicker end_time_input;
     Button add_confirm_btn;
     Button add_deny_btn;
     Calendar myCalendar;
@@ -52,7 +53,8 @@ public class add_reminder extends AppCompatActivity {
 
         reminder_name_input = findViewById(R.id.reminder_name_input);
         date_input = findViewById(R.id.date_input);
-        time_input = findViewById(R.id.time_input);
+        start_time_input = findViewById(R.id.start_time_input);
+        end_time_input = findViewById(R.id.end_time_input);
         add_confirm_btn = findViewById(R.id.add_confirm_btn);
         add_deny_btn = findViewById((R.id.add_deny_btn));
         myCalendar = Calendar.getInstance();
@@ -62,36 +64,22 @@ public class add_reminder extends AppCompatActivity {
             public void onClick(View v) {
                 String name = reminder_name_input.getText().toString();
                 String day = date_input.getText().toString();
-                String time;
+                String start_time = time2String(start_time_input);
+                String end_time = time2String(end_time_input);
 
-                int hour = time_input.getHour();
-                int min = time_input.getMinute();
-                String format;
-                if (hour == 0) {
-                    hour += 12;
-                    format = "AM";
-                } else if (hour == 12) {
-                    format = "PM";
-                } else if (hour > 12) {
-                    hour -= 12;
-                    format = "PM";
-                } else {
-                    format = "AM";
-                }
-                if(min < 10) {
-                    time = new StringBuilder().append(hour).append(" : ")
-                            .append("0").append(min).append(" ").append(format).toString();
-                } else {
-                    time = new StringBuilder().append(hour).append(" : ")
-                            .append(min).append(" ").append(format).toString();
-                }
+                int start_time_total = start_time_input.getHour()*60 + start_time_input.getMinute();
+                int end_time_total = end_time_input.getHour()*60 + end_time_input.getMinute();
 
-                if(name.isEmpty() || day.isEmpty() || time.isEmpty()) {
+                if(name.isEmpty() || day.isEmpty() || start_time.isEmpty() || end_time.isEmpty()) {
                     Toast toast = Toast.makeText(getApplicationContext(),
                             "At least one of the input fields are empty", Toast.LENGTH_SHORT);
                     toast.show();
+                } else if (start_time_total <= end_time_total) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "End time is later than start time", Toast.LENGTH_SHORT);
+                    toast.show();
                 } else {
-                    save(name, day, time);
+                    save(name, day, start_time, end_time);
                     finish();
                 }
             }
@@ -103,7 +91,6 @@ public class add_reminder extends AppCompatActivity {
                 finish();
             }
         });
-
 
         reminder_name_input.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -139,18 +126,45 @@ public class add_reminder extends AppCompatActivity {
         });
     }
 
+    private String time2String(TimePicker time){
+        String output;
+        int hour = time.getHour();
+        int min = time.getMinute();
+        String format;
+        if (hour == 0) {
+            hour += 12;
+            format = "AM";
+        } else if (hour == 12) {
+            format = "PM";
+        } else if (hour > 12) {
+            hour -= 12;
+            format = "PM";
+        } else {
+            format = "AM";
+        }
+        if(min < 10) {
+            output = new StringBuilder().append(hour).append(" : ")
+                    .append("0").append(min).append(" ").append(format).toString();
+        } else {
+            output = new StringBuilder().append(hour).append(" : ")
+                    .append(min).append(" ").append(format).toString();
+        }
+        return output;
+    }
+
     private void updateLabel() {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         date_input.setText(sdf.format(myCalendar.getTime()));
     }
-    private void save(String name, String day, String time) {
+    private void save(String name, String day, String start_time, String end_time) {
 
         CreateReminderInput input = CreateReminderInput.builder()
                 .name(name)
                 .day(day)
-                .time(time)
+                .start_time(start_time)
+                .end_time(end_time)
                 .build();
 
         CreateReminderMutation addReminderMutation = CreateReminderMutation.builder()
@@ -202,12 +216,13 @@ public class add_reminder extends AppCompatActivity {
                 @Override
                 public void run() {
                     for(int i = 0; i < mReminders.size(); i++) {
-                        String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, time=");
+                        String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, start_time=|, end_time=");
                         if(!reminder_data.id_exists(Tokens[1])) {
                             reminder_data.addID(Tokens[1]);
                             reminder_data.addName(Tokens[2]);
                             reminder_data.addDay(Tokens[3]);
-                            reminder_data.addTime(Tokens[4].replace("}", ""));
+                            reminder_data.addStartTime(Tokens[4]);
+                            reminder_data.addEndTime(Tokens[5].replace("}", ""));
                         }
                     }
                     reminder_data.getAdapter().notifyDataSetChanged();

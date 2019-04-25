@@ -64,7 +64,7 @@ public class ReminderApp extends AppCompatActivity {
         reminder_data.setList((ListView) findViewById(R.id.reminder_list));
         list_adapter = new reminder_list_adapter(this,
                 reminder_data.getIDs(), reminder_data.getNames(), reminder_data.getDays(),
-                reminder_data.getTimes(), ReminderApp.this);
+                reminder_data.getStartTimes(), reminder_data.getEndTimes(), ReminderApp.this);
         reminder_data.setAdapter(list_adapter);
         reminder_data.getList().setAdapter(list_adapter);
 
@@ -149,12 +149,13 @@ public class ReminderApp extends AppCompatActivity {
                             valid = 1;
                         } else {
                             for (int i = 0; i < mReminders.size(); i++) {
-                                String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, time=");
+                                String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, start_time=|, end_time=");
                                 if (!reminder_data.id_exists(Tokens[1])) {
                                     reminder_data.addID(Tokens[1]);
                                     reminder_data.addName(Tokens[2]);
                                     reminder_data.addDay(Tokens[3]);
-                                    reminder_data.addTime(Tokens[4].replace("}", ""));
+                                    reminder_data.addStartTime(Tokens[4]);
+                                    reminder_data.addEndTime(Tokens[5].replace("}", ""));
                                 }
                             }
                             reminder_data.getAdapter().notifyDataSetChanged();
@@ -211,7 +212,6 @@ public class ReminderApp extends AppCompatActivity {
 
 
             // send picture to cloud
-            // TODO
             CreatePicturesInput input = CreatePicturesInput.builder()
                     .name(AWSMobileClient.getInstance().getIdentityId())
                     .picture(photo_array)

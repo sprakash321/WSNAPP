@@ -35,19 +35,22 @@ public class reminder_list_adapter extends BaseAdapter {
     ArrayList<String> reminder_ids;
     ArrayList<String> reminder_names;
     ArrayList<String> reminder_days;
-    ArrayList<String> reminder_time;
+    ArrayList<String> reminder_start_time;
+    ArrayList<String> reminder_end_time;
 
     private Activity activity; //activity is defined as a global variable in your AsyncTask
 
     public reminder_list_adapter(Context c, ArrayList<String> reminder_ids,
                                  ArrayList<String> reminder_names,
                                  ArrayList<String> reminder_days,
-                                 ArrayList<String> reminder_time,
+                                 ArrayList<String> reminder_start_time,
+                                 ArrayList<String> reminder_end_time,
                                  Activity activity) {
         this.reminder_ids = reminder_ids;
         this.reminder_names = reminder_names;
         this.reminder_days = reminder_days;
-        this.reminder_time = reminder_time;
+        this.reminder_start_time = reminder_start_time;
+        this.reminder_end_time = reminder_end_time;
         this.activity = activity;
         mInflator = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -56,8 +59,8 @@ public class reminder_list_adapter extends BaseAdapter {
         reminder_ids.clear();
         reminder_names.clear();
         reminder_days.clear();
-        reminder_time.clear();
-        //notifyDataSetChanged();
+        reminder_start_time.clear();
+        reminder_end_time.clear();
     }
 
     @Override
@@ -80,7 +83,8 @@ public class reminder_list_adapter extends BaseAdapter {
         View v = mInflator.inflate(R.layout.reminder_list_display, null);
         final TextView reminder_name_txt = v.findViewById(R.id.reminder_name_input);
         final TextView reminder_days_txt = v.findViewById(R.id.reminder_days);
-        final TextView reminder_time_txt = v.findViewById(R.id.reminder_time);
+        final TextView reminder_start_time_txt = v.findViewById(R.id.reminder_start_time);
+        final TextView reminder_end_time_txt = v.findViewById(R.id.reminder_end_time);
 
         // delete reminder button
         Button delete_btn = v.findViewById(R.id.delete_btn);
@@ -88,22 +92,18 @@ public class reminder_list_adapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 delete(reminder_data.getID(i));
-
-                //reminder_ids.remove(i);
-                //reminder_names.remove(i);
-                //reminder_days.remove(i);
-                //reminder_time.remove(i);
-                //notifyDataSetChanged();
             }
         });
 
         String name = reminder_names.get(i);
         String days = reminder_days.get(i);
-        String time = reminder_time.get(i);
+        String start_time = reminder_start_time.get(i);
+        String end_time = reminder_end_time.get(i);
 
         reminder_name_txt.setText(name);
         reminder_days_txt.setText(days);
-        reminder_time_txt.setText(time);
+        reminder_start_time_txt.setText(start_time);
+        reminder_end_time_txt.setText(end_time);
 
         return v;
     }
@@ -162,12 +162,13 @@ public class reminder_list_adapter extends BaseAdapter {
                 public void run() {
                     reminder_data.reset();
                     for(int i = 0; i < mReminders.size(); i++) {
-                        String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, time=");
+                        String[] Tokens = mReminders.get(i).toString().split("id=|, name=|, day=|, start_time=|, end_time");
                         if(!reminder_data.id_exists(Tokens[1])) {
                             reminder_data.addID(Tokens[1]);
                             reminder_data.addName(Tokens[2]);
                             reminder_data.addDay(Tokens[3]);
-                            reminder_data.addTime(Tokens[4].replace("}", ""));
+                            reminder_data.addStartTime(Tokens[4]);
+                            reminder_data.addEndTime(Tokens[5].replace("}", ""));
                         }
                     }
                     reminder_data.getAdapter().notifyDataSetChanged();

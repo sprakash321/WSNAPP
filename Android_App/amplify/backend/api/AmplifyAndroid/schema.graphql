@@ -6,7 +6,8 @@ type Reminder @model @auth(rules: [
 	id: ID!
 	name: String!
 	day: String
-	time: String
+	start_time: String
+	end_time: String
 }
 
 type Pictures @model @auth(rules: [

@@ -4,7 +4,8 @@ mutation CreateReminder($input: CreateReminderInput!) {
     id
     name
     day
-    time
+    start_time
+    end_time
   }
 }
 mutation UpdateReminder($input: UpdateReminderInput!) {
@@ -12,7 +13,8 @@ mutation UpdateReminder($input: UpdateReminderInput!) {
     id
     name
     day
-    time
+    start_time
+    end_time
   }
 }
 mutation DeleteReminder($input: DeleteReminderInput!) {
@@ -20,7 +22,8 @@ mutation DeleteReminder($input: DeleteReminderInput!) {
     id
     name
     day
-    time
+    start_time
+    end_time
   }
 }
 mutation CreatePictures($input: CreatePicturesInput!) {

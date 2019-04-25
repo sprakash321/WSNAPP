@@ -4,7 +4,8 @@ query GetReminder($id: ID!) {
     id
     name
     day
-    time
+    start_time
+    end_time
   }
 }
 query ListReminders(
@@ -17,7 +18,8 @@ query ListReminders(
       id
       name
       day
-      time
+      start_time
+      end_time
     }
     nextToken
   }

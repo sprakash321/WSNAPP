@@ -4,7 +4,8 @@ subscription OnCreateReminder {
     id
     name
     day
-    time
+    start_time
+    end_time
   }
 }
 subscription OnUpdateReminder {
@@ -12,7 +13,8 @@ subscription OnUpdateReminder {
     id
     name
     day
-    time
+    start_time
+    end_time
   }
 }
 subscription OnDeleteReminder {
@@ -20,7 +22,8 @@ subscription OnDeleteReminder {
     id
     name
     day
-    time
+    start_time
+    end_time
   }
 }
 subscription OnCreatePictures {

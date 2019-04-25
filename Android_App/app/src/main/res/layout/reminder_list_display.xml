@@ -3,6 +3,28 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/start"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        android:text="End Time:" />
+
+    <TextView
+        android:id="@+id/reminder_end_time"
+        android:layout_width="71dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reminder_start_time"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/end"
+        android:layout_toRightOf="@+id/reminder_days"
+        android:text="Time" />
+
+    <TextView
         android:id="@+id/reminder_name_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -11,7 +33,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="24dp"
         android:text="Reminder Name"
         android:textSize="24sp" />
 
@@ -28,14 +50,14 @@
         android:text="Days" />
 
     <TextView
-        android:id="@+id/reminder_time"
+        android:id="@+id/reminder_start_time"
         android:layout_width="71dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/reminder_name_input"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
+        android:layout_below="@+id/reminder_days"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"
-        android:layout_toEndOf="@+id/reminder_days"
+        android:layout_toEndOf="@+id/start"
         android:layout_toRightOf="@+id/reminder_days"
         android:text="Time" />
 
@@ -47,7 +69,18 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="53dp"
-        android:layout_marginRight="53dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:text="Delete" />
+
+    <TextView
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reminder_days"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        android:text="Start Time:" />
+
 </RelativeLayout>
